@@ -1,0 +1,37 @@
+services:
+  oracle:
+    image: gvenzl/oracle-xe:21.3.0
+    hostname: oracle
+    container_name: oracle
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    environment:
+      ORACLE_PASSWORD: testing
+    volumes:
+      - ./oracle/container-entrypoint-initdb.d:/container-entrypoint-initdb.d
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0.1
+    depends_on:
+      oracle:
+        condition: service_healthy
+    networks:
+      default:
+        aliases:
+          - keycloak_jgroup
+    hostname: keycloak
+    container_name: keycloak
+    ports:
+      - "8080:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: oracle
+      KC_DB_URL: jdbc:oracle:thin:@//oracle:1521/xepdb1
+      KC_DB_USERNAME: keycloak_owner
+      KC_DB_PASSWORD: password
+    command: start-dev
