@@ -9,7 +9,7 @@ git clone https://github.com/slominskir/keycloak_oracle
 cd keycloak_oracle
 ```
 
-2. Launch Compose
+2. Launch [Compose](https://github.com/docker/compose)
 ```
 docker compose up
 ```
