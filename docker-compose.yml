@@ -19,10 +19,6 @@ services:
     depends_on:
       oracle:
         condition: service_healthy
-    networks:
-      default:
-        aliases:
-          - keycloak_jgroup
     hostname: keycloak
     container_name: keycloak
     ports:
